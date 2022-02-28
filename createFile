@@ -1,0 +1,15 @@
+#!/bin/bash
+# script qui génère des fichiers pour tester le script
+
+text="c'est un texte de merde"
+dir="test_dir"
+
+[ ! -d $dir ] && mkdir $dir
+
+for i in {1..5}; do
+    [ -d "$dir/dir_$i" ] && rm -r "$dir/dir_$i"
+    mkdir "$dir/dir_$i"
+    for j in {1..5}; do
+        echo $text > "$dir/dir_$i/file_$j"
+    done
+done

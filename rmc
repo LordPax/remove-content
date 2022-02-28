@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# getFile <dir>
+function getFile() {
+    [ "$1" == "" ] && exit 1
+
+    local files="";
+    local list=$(ls "$1")
+
+    for file in $list; do
+        [ -f "$file" ] && files="$files $file"
+    done
+
+    echo "$files"
+}
+
+# getDir <dir>
+function getDir() {
+    [ "$1" == "" ] && exit 1
+
+    local dirs="";
+    local list=$(ls "$1")
+
+    for dir in $list; do
+        [ -d "$dir" ] && dirs="$dirs $dir"
+    done
+
+    echo "$dirs"
+}
+
+# explore <dir>
+function explore() {
+    [ "$1" == "" ] && exit 1
+
+    local files=$(getFile "$1")
+    local dirs=$(getDir "$1")
+    echo "files: $files, dirs: $dirs"
+
+    for dir in $dirs; do
+        cd "$dir" || exit 1
+        explore .
+        cd ..
+    done
+}
+
+explore .
