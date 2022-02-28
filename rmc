@@ -1,6 +1,6 @@
 #!/bin/bash
 # author : lordpax
-# rmc v3.3
+# rmc v0.1
 # Supprime le contenu des dossiers et des sous-dossiers sans supprimer les dossiers eux-même
 
 # getFile <file|dir>
