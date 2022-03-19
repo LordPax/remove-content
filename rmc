@@ -1,39 +1,22 @@
 #!/bin/bash
 # author : lordpax
-# rmc v0.1
+# rmc v1.0.0
 # Supprime le contenu des dossiers et des sous-dossiers sans supprimer les dossiers eux-même
 
-# getFile <file|dir>
-function getFile() {
-    [ "$1" == "" ] && exit 1
-
-    local result=""
-    local list=$(ls)
-
-    for file in $list; do
-        if [ "$1" == "file" ]; then
-            [ -f "$file" ] && result="$result $file"
-        elif [ "$1" == "dir" ]; then
-            [ -d "$file" ] && result="$result $file"
-        fi
-    done
-
-    echo "$result"
-}
-
+# explore <dir>
 function explore() {
-    local files=$(getFile file)
-    local dirs=$(getFile dir)
-    # echo "files: $files, dirs: $dirs"
-    [ "$files" != "" ] && rm $files && echo "deleting of \"$files\" ..."
+    [ "$1" == "" ] && echo "Usage: rmc <dir>" && exit 1
+    [ ! -d "$1" ] && echo "ERROR: Directory \"$1\" not found" && exit 1
+    local dir=$(echo "$1" | sed -e "s=/$==")
 
-    for dir in $dirs; do
-        echo "got to $dir"
-        cd "$dir" || exit 1
-        explore
-        cd ..
+    for fileOrDir in $(ls "$dir"); do
+        if [ -d "$dir/$fileOrDir" ]; then
+            explore "$dir/$fileOrDir"
+            continue
+        fi
+        echo "Deleting $dir/$fileOrDir"
+        rm "$dir/$fileOrDir"
     done
 }
 
-cd "$1" || exit 1
-explore
+explore "$1"
